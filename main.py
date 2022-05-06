@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import math
+import os
 
 img_base_path = "images/"
 scaling_factor = 0.25
@@ -8,8 +9,12 @@ visualize = True
 save = False
 
 def main():
-    for i in range(0,9):
-        original_img = cv2.imread(img_base_path + "0" + str(i) + ".jpg")
+    images = os.listdir("images")
+    for file in images:
+        if file == ".gitignore": 
+            continue
+
+        original_img = cv2.imread(img_base_path + file)
         org_max_y, org_max_x, _ = original_img.shape
         target_height = org_max_y
         
@@ -33,7 +38,7 @@ def main():
         
         if save:
             combination = cv2.hconcat([original_img, img_warped])
-            cv2.imwrite(img_base_path + "combined_0" + str(i) + ".jpeg", combination)
+            cv2.imwrite(img_base_path + "combined_" + file, combination)
     return
 
 
