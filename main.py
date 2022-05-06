@@ -34,7 +34,7 @@ def main():
 
         if visualize:
             cv2.imshow("WARPED DOCUMENT", combination)
-            cv2.waitKey(1)
+            cv2.waitKey(0)
         
         if save:
             combination = cv2.hconcat([original_img, img_warped])
