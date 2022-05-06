@@ -29,6 +29,8 @@ def main():
         M, _ = cv2.findHomography(np.array(list(paper_corners)), np.array([[0,0], [int(target_height / math.sqrt(2)), 0], [0, target_height], [int(target_height / math.sqrt(2)), target_height]]))
         img_warped = cv2.warpPerspective(original_img, M, (int(target_height / math.sqrt(2)), target_height))
 
+        img_warped = applyThreshold(img_warped)
+
         combination = cv2.hconcat([original_img, img_warped])
         combination = resizeImage(combination, factor=0.4)
 
@@ -37,7 +39,6 @@ def main():
             cv2.waitKey(0)
         
         if save:
-            combination = cv2.hconcat([original_img, img_warped])
             cv2.imwrite(img_base_path + "combined_" + file, combination)
     return
 
@@ -113,6 +114,13 @@ def resetScaling(paper_corners):
         corner[0] = corner[0] / scaling_factor
         corner[1] = corner[1] / scaling_factor
     return paper_corners
+
+
+def applyThreshold(img):
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 51, 10)
+    img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+    return img
 
 
 if __name__ == "__main__":
